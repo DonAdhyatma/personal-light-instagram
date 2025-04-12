@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SettingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,13 +22,17 @@ Route::middleware('auth')->group(function () {
 
     // ✅ Halaman profile/feed post
     Route::get('/profile', function () {
-        $posts = auth()->user()->posts()->latest()->get();
-        return view('profile', compact('posts'));
+        $user = auth()->user()->fresh();
+        $posts = $user->posts()->latest()->get();
+        return view('profile', compact('user', 'posts'));
     })->name('profile');
-
+    
     // ✅ Edit post (caption dan file)
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+
+    // Proses delete post
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
     // ✅ Pengelolaan profil (bawaan Laravel Breeze)
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -35,8 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
      // ✅ Archive Page
-     Route::get('/archive', [PostController::class, 'archive'])->name('posts.archive');
-     Route::get('/archive/export/{format}', [PostController::class, 'export'])->name('posts.archive.export');
+    Route::get('/archive', [PostController::class, 'archive'])->name('posts.archive');
+    Route::get('/archive/export/{format}', [PostController::class, 'export'])->name('posts.archive.export');
+
+    Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 });
 
 require __DIR__ . '/auth.php';

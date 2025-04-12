@@ -1,7 +1,7 @@
 <table>
     <thead>
         <tr>
-            <th>#</th>
+            <th>No</th>
             <th>Caption</th>
             <th>Type</th>
             <th>Created At</th>

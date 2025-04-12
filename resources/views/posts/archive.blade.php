@@ -24,13 +24,13 @@
             </form>
 
             <div class="mb-4 flex justify-end gap-3">
-                <a href="{{ route('posts.archive.export', 'xlsx') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Export Excel</a>
-                <a href="{{ route('posts.archive.export', 'pdf') }}" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Export PDF</a>
+                <a href="{{ route('posts.archive.export', ['format' => 'xlsx'] + request()->only(['start_date', 'end_date'])) }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Export Excel</a>
+                <a href="{{ route('posts.archive.export', ['format' => 'pdf'] + request()->only(['start_date', 'end_date'])) }}" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Export PDF</a>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto text-sm">
-                    <thead class="bg-gray-200">
+                    <thead class="bg-orange-300">
                         <tr>
                             <th class="px-4 py-2 text-left">No</th>
                             <th class="px-4 py-2 text-left">Caption</th>
