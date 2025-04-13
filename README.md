@@ -126,7 +126,8 @@ Buka browser dan akses aplikasi di http://127.0.0.1:8000
 2. **Akun 2**
     - Email: karim9@gmail.com
     - Password: karim123
-      Membuat akun baru: Silakan pilih tombol "Register" pada halaman login jika ingin membuat akun baru.
+
+Membuat akun baru: Silakan pilih tombol "Register" pada halaman login jika ingin membuat akun baru.
 
 ## 💾 Struktur Database
 
