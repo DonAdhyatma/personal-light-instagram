@@ -9,7 +9,7 @@
 
   <div class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
 
-    {{-- Foto Profil + Bio dalam style Instagram --}}
+    {{-- Foto Profil + Bio --}}
     <div class="mb-6 flex items-start gap-8">
       <div class="flex-shrink-0">
         @if ($user->photo_profile)
@@ -54,37 +54,69 @@
       <div class="grid {{ $gridCols }} gap-4">
         @foreach ($posts as $post)
           <div class="border rounded overflow-hidden shadow bg-white flex flex-col">
+            {{-- Media --}}
             @if (Str::endsWith($post->file_path, ['.jpg', '.jpeg', '.png']))
-              <div class="w-full h-48 bg-white flex items-center justify-center">
-                <img src="{{ asset('storage/' . $post->file_path) }}" alt="Image" class="h-full object-contain">
-              </div>
+              <img src="{{ asset('storage/' . $post->file_path) }}" alt="Image" class="w-full h-48 object-contain">
             @elseif (Str::endsWith($post->file_path, ['.mp4', '.mov']))
-              <div class="w-full h-48 bg-white flex items-center justify-center">
-                <video controls class="h-full object-contain">
-                  <source src="{{ asset('storage/' . $post->file_path) }}" type="{{ $post->file_type }}">
-                  Your browser does not support the video tag.
-                </video>
-              </div>
+              <video controls class="w-full h-48 object-contain">
+                <source src="{{ asset('storage/' . $post->file_path) }}" type="{{ $post->file_type }}">
+                Your browser does not support the video tag.
+              </video>
             @endif
 
             <div class="p-3 flex-1 flex flex-col justify-between">
+              {{-- Caption & Waktu --}}
               <div>
                 <p class="text-gray-800 text-sm">{{ $post->caption }}</p>
                 <p class="text-xs text-gray-500 mt-1">{{ $post->created_at->format('d M Y H:i') }}</p>
               </div>
-              <div class="mt-3 flex justify-between items-center">
-                <a href="{{ route('posts.edit', $post->id) }}"
-                  class="inline-block px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition">
-                  Edit
-                </a>
-                <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Yakin ingin hapus postingan ini?')">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit"
-                    class="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition">
-                    Delete
-                  </button>
-                </form>
+
+              {{-- Likes & Comments --}}
+              <div class="mt-3 flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                  {{-- Like Button --}}
+                  <form action="{{ route('posts.toggleLike', $post->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="text-sm text-pink-600 hover:text-pink-800 transition">
+                      ❤️ {{ $post->likes->count() }} Like{{ $post->likes->count() !== 1 ? 's' : '' }}
+                    </button>
+                  </form>
+
+                  {{-- Edit & Delete --}}
+                  <div class="flex gap-2">
+                    <a href="{{ route('posts.edit', $post->id) }}"
+                      class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">Edit</a>
+                    <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Yakin ingin hapus postingan ini?')">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit"
+                        class="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">Delete</button>
+                    </form>
+                  </div>
+                </div>
+
+                {{-- Komentar --}}
+                <div>
+                  <p class="text-xs text-gray-600 mb-1">💬 {{ $post->comments->count() }} Comment{{ $post->comments->count() !== 1 ? 's' : '' }}</p>
+                  
+                  {{-- Form komentar --}}
+                  <form action="{{ route('posts.comment', $post->id) }}" method="POST" class="flex gap-2 items-center mb-2">
+                    @csrf
+                    <input type="text" name="comment" placeholder="Tulis komentar..."
+                      class="flex-1 border rounded px-2 py-1 text-sm" required>
+                    <button type="submit" class="text-sm bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">Kirim</button>
+                  </form>
+
+                  {{-- Daftar komentar --}}
+                  <div class="space-y-1 max-h-24 overflow-y-auto">
+                    @foreach($post->comments as $comment)
+                      <div class="text-sm text-gray-700">
+                        <span class="font-semibold">{{ $comment->user->name }}:</span>
+                        {{ $comment->comment }}
+                      </div>
+                    @endforeach
+                  </div>
+                </div>
               </div>
             </div>
           </div>

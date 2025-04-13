@@ -45,6 +45,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+
+    Route::get('/profile/{username}', [ProfileController::class, 'show'])->name('profile.show');
+
+    Route::post('/posts/{post}/like', [PostController::class, 'toggleLike'])->name('posts.toggleLike');
+    Route::post('/posts/{post}/comment', [PostController::class, 'comment'])->name('posts.comment');
 });
 
 require __DIR__ . '/auth.php';

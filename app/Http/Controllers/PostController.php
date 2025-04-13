@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PostsExport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use App\Models\Like;
 
 class PostController extends Controller
 {
@@ -33,7 +34,8 @@ class PostController extends Controller
             return back()->with('error', 'Gagal menyimpan file.');
         }
 
-        $fileType = $file->getClientMimeType();
+        // Ambil tipe utama file (image/video)
+        $fileType = str_starts_with($file->getClientMimeType(), 'image') ? 'image' : 'video';
 
         Post::create([
             'user_id' => auth()->id(),
@@ -72,7 +74,7 @@ class PostController extends Controller
             $file = $request->file('file');
             $path = $file->store('posts', 'public');
             $post->file_path = $path;
-            $post->file_type = $file->getMimeType();
+            $post->file_type = str_starts_with($file->getClientMimeType(), 'image') ? 'image' : 'video';
         }
 
         $post->caption = $validated['caption'];
@@ -93,7 +95,6 @@ class PostController extends Controller
 
         return redirect()->route('profile')->with('success', 'Post deleted successfully!');
     }
-
 
     // ✅ Menampilkan halaman archive dengan filter tanggal
     public function archive(Request $request)
@@ -142,5 +143,41 @@ class PostController extends Controller
         }
 
         return redirect()->back()->with('error', 'Format tidak didukung.');
+    }
+
+    // 🆕 Like & Unlike Post (FIXED)
+    public function toggleLike(Post $post)
+    {
+        $user = auth()->user();
+        
+        // Cek apakah user sudah like post ini
+        $existingLike = $post->likes()->where('user_id', $user->id)->first();
+        
+        if ($existingLike) {
+            // Jika sudah like, hapus likenya
+            $existingLike->delete();
+        } else {
+            // Jika belum like, buat like baru
+            $post->likes()->create([
+                'user_id' => $user->id
+            ]);
+        }
+        
+        return redirect()->back();
+    }
+
+    // 🆕 Komentar pada Postingan
+    public function comment(Request $request, Post $post)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:500',
+        ]);
+
+        $post->comments()->create([
+            'user_id' => auth()->id(),
+            'comment' => $request->comment,
+        ]);
+
+        return redirect()->back();
     }
 }

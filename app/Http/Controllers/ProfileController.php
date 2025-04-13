@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
+use App\Models\Post;
 
 class ProfileController extends Controller
 {
@@ -56,5 +58,20 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * Display the public profile page with posts, likes, and comments.
+     */
+    public function show($username): View
+    {
+        $user = User::where('name', $username)->firstOrFail();
+
+        $posts = Post::where('user_id', $user->id)
+            ->with(['likes', 'comments'])
+            ->latest()
+            ->get();
+
+        return view('profile.show', compact('user', 'posts'));
     }
 }
