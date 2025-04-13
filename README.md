@@ -1,66 +1,153 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Personal Light Instagram
+Project ini merupakan implementasi aplikasi "Personal Light Instagram" dengan fitur-fitur dasar seperti unggah post (gambar/video), like, komentar, pengaturan profil, dan ekspor data archive.
+Fitur Aplikasi
+Autentikasi
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Register/signup untuk pengguna baru
+Login menggunakan username dan password yang telah didaftarkan (bukan hardcode)
 
-## About Laravel
+Profile Page
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Menampilkan foto profil dan username
+Feed foto/video yang telah diunggah
+Detail foto/video saat diklik
+Menampilkan bio profil
+Fitur unggah foto/video dengan format JPG/PNG/JPEG/MP4/MOV (maks. 150MB)
+Caption untuk setiap unggahan
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Setting Profile
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Pengaturan jumlah feed per row (default: 3 feeds per row)
+Edit foto profil
+Edit username
+Edit bio profil
 
-## Learning Laravel
+Archive Page
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Tampilan archive berupa data table (foto/video post, tanggal post, caption)
+Export archive ke format XLSX dan PDF
+Filter berdasarkan tanggal untuk download archive
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Fitur Tambahan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Like post
+Komentar pada post
+Informasi like dan comment ditambahkan pada data archive
 
-## Laravel Sponsors
+Kebutuhan Sistem
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+PHP 8.3 atau lebih tinggi
+Composer
+MySQL / MariaDB
+Node.js & NPM
 
-### Premium Partners
+Langkah Instalasi
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Clone repository ini
 
-## Contributing
+git clone https://github.com/DonAdhyatma/personal-light-instagram.git
+cd personal-light-instagram
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install dependencies PHP
 
-## Code of Conduct
+composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Install dependencies JavaScript (jika menggunakan Vite/Mix)
 
-## Security Vulnerabilities
+npm install
+npm run build
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Salin file .env.example menjadi .env
 
-## License
+cp .env.example .env
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Buat database baru di MySQL/MariaDB
+Impor database dari file SQL yang disediakan
+
+mysql -u username_database_anda -p nama_database_anda < personal_light_instagram.sql
+Atau, Anda juga dapat mengimpor file SQL menggunakan tools seperti phpMyAdmin:
+
+Buka phpMyAdmin di browser
+Pilih database yang telah dibuat
+Klik tab "Import"
+Pilih file personal_light_instagram.sql
+Klik tombol "Go" atau "Import" untuk memulai proses impor
+
+Edit file .env dan sesuaikan konfigurasi database:
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database_anda
+DB_USERNAME=username_database_anda
+DB_PASSWORD=password_database_anda
+
+Generate application key
+
+php artisan key:generate
+
+Jika Anda belum mengimpor database dari file SQL, Anda dapat menjalankan migrasi database
+
+php artisan migrate
+
+(Opsional) Jika Anda belum mengimpor database dari file SQL dan ingin mengisi data dummy
+
+php artisan db:seed
+
+Buat symbolic link untuk storage
+
+php artisan storage:link
+
+Jalankan web server
+
+php artisan serve
+
+Akses aplikasi di http://127.0.0.1:8000
+
+Informasi Login
+Akun yang tersedia di database:
+
+Akun 1:
+
+Email: kroos8@gmail.com
+Password: kroos123
+
+Akun 2:
+
+Email: karim9@gmail.com
+Password: karim123
+
+Membuat akun baru:
+Silakan pilih tombol "Register" pada halaman login jika ingin membuat akun baru.
+Struktur Database
+
+users: Menyimpan data user (username, email, password, profile_pic, bio)
+posts: Menyimpan data postingan (user_id, file_path, file_type, caption)
+likes: Menyimpan data like (user_id, post_id)
+comments: Menyimpan data komentar (user_id, post_id, comment)
+settings: Menyimpan pengaturan user (user_id, feeds_per_row)
+
+Tech Stack
+
+Laravel 11
+MySQL / MariaDB
+Maatwebsite Excel untuk ekspor XLSX
+DomPDF untuk ekspor PDF
+
+Screenshoot Aplikasi
+(Tambahkan beberapa screenshot aplikasi di sini untuk memberikan gambaran visual)
+Troubleshooting
+Masalah Umum
+
+Error saat upload file: Pastikan folder storage/app/public/posts memiliki permission yang benar
+Error saat menggunakan like: Pastikan struktur relasi likes() sudah benar di model Post.php
+Error saat ekspor PDF: Pastikan extension php-dom terinstall
+Error saat login: Pastikan kredensial yang digunakan benar. Gunakan akun yang tersedia atau buat akun baru melalui halaman register
+Error saat impor database: Pastikan file SQL tidak corrupt dan Anda memiliki izin yang cukup untuk mengimpor ke database
+
+Masalah Umum Autentikasi
+
+Lupa Password: Fitur reset password tersedia melalui halaman login, klik tautan "Lupa Password"
+Email verifikasi tidak terkirim: Periksa folder spam/junk pada email Anda
+
+Jika mengalami masalah lain, silakan buat issue baru di repository ini.
